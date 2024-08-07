@@ -41,7 +41,7 @@ function App() {
           reject(new Error("Failed to read file"));
         }
       };
-      reader.onerror = (event) => {
+      reader.onerror = () => {
         reject(new Error("Failed to read file"));
       };
       reader.readAsText(file);
