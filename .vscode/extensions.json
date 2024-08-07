@@ -1,0 +1,14 @@
+{
+  "futureRecommended": [
+    "esbenp.prettier-vscode",
+    "msjsdiag.debugger-for-chrome",
+    "dbaeumer.vscode-eslint",
+    "dsznajder.es7-react-js-snippets"
+  ],
+  "recommendations": [
+    "GitHub.vscode-github-actions",
+    "MS-vsliveshare.vsliveshare",
+    "Gruntfuggly.todo-tree",
+    "TzachOvadia.todo-list"
+  ]
+}
