@@ -3,12 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://AndrewCLeon.github.io/lspoc",
+  "homepage": "https://andrewcleon.github.io/lspoc",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d dist",
     "lint": "eslint .",
     "preview": "vite preview"
   },
