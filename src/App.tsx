@@ -1,21 +1,24 @@
 import React from "react";
 import reactLogo from "./assets/react.svg";
+import openAILogo from "./assets/openai.svg";
 import viteLogo from "/vite.svg";
 import M from "materialize-css";
-import "./App.css";
 import { OpenAIBaseClient } from "./clients/OpenAI/OpenAIBaseClient";
 import { OpenAIAgent } from "./clients/OpenAI/OpenAI";
+import "./App.css";
 
 function App() {
   // Store the file in a list of uploaded files (by file name) and make it efficient (useReducer?)
   // Show the list of uploaded files
 
   // When a file is uploaded, read the file and extract the data
+  const [tokensConsumed, setTokensConsumed] = React.useState<number>(0);
   const [fileSize, setFileSize] = React.useState<number>(0);
+  const [fileContent, setFileContent] = React.useState<string[]>([]);
   const [selectedNoteFiles, setSelectedNoteFiles] = React.useState<
     Record<string, File>
   >({});
-  const [showApiKeyButton, setShowApiKeyButton] = React.useState<string>("");
+  const [hideApiKeyButton, setHideApiKeyButton] = React.useState<string>("");
 
   // Initialize materialize js
   React.useEffect(() => {
@@ -48,7 +51,7 @@ function App() {
     });
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
     // I need to ensure that the file is not uploaded twice
     const requestedFiles = Array.from(event.target.files ?? []);
     const uniqueUploadNames = new Set(requestedFiles.map((f) => f.name));
@@ -69,21 +72,13 @@ function App() {
 
   const handleOpenModal = async () => {
     const apiKey = prompt("Enter OpenAI API Key");
-    setShowApiKeyButton(apiKey ?? "");
+    setHideApiKeyButton(apiKey ?? "");
 
     OpenAIBaseClient.API_KEY = apiKey ?? "";
     OpenAIAgent.API_KEY = apiKey ?? "";
-
-    const agent = new OpenAIAgent("Hello, I am a bot");
-
-    const res = await agent.getModelResponse("Hello", {}).catch((err) => {
-      console.error(err);
-    });
-
-    console.log(res);
   };
 
-  const apiKeyButtonContent = showApiKeyButton ? null : (
+  const apiKeyButtonContent = hideApiKeyButton ? null : (
     <button onClick={handleOpenModal}>Set OpenAI API Key</button>
   );
 
@@ -98,17 +93,57 @@ function App() {
       })
     );
 
-    console.log(fileData);
+    setFileContent(fileData);
   };
 
-  const uploadFilesContent = !Object.keys(selectedNoteFiles).length ? null : (
-    <div className="pt-4">
-      <button onClick={readFilesIntoMemory}>
-        Upload ({`${Object.keys(selectedNoteFiles).length}`}) Files
-      </button>
+  const uploadFilesContent =
+    !Object.keys(selectedNoteFiles).length || !hideApiKeyButton ? null : (
+      <>
+        <div className="pt-4">
+          <button onClick={readFilesIntoMemory}>
+            Upload ({`${Object.keys(selectedNoteFiles).length}`}) Files
+          </button>
+        </div>
+      </>
+    );
+
+  const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
+  const handleSendChat = async () => {
+    const userInput = textAreaRef.current?.value ?? "";
+
+    const fileContentContext = fileContent.join("\n");
+    const agent = new OpenAIAgent(fileContentContext);
+    const { 0: response, 1: tokens } = await agent.getModelResponse(
+      userInput,
+      {}
+    );
+
+    textAreaRef.current!.value = response;
+
+    setTokensConsumed((prev) => prev + tokens);
+  };
+
+  const fileChatContent = !fileContent.length ? (
+    <>
+      <div>
+        <input
+          type="file"
+          accept=".txt,.json,.md"
+          onChange={handleFileSelection}
+          multiple
+        />
+      </div>
+      {uploadFilesContent}
+    </>
+  ) : (
+    <div>
+      <h2>Chat</h2>
+      <div>
+        <button onClick={handleSendChat}>Send</button>
+        <textarea ref={textAreaRef}></textarea>
+      </div>
     </div>
   );
-
   return (
     <>
       <div>
@@ -118,8 +153,12 @@ function App() {
         <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
+        <a href="https://platform.openai.com/docs/overview" target="_blank">
+          <img src={openAILogo} className="logo OpenAI" alt="OpenAI logo" />
+        </a>
       </div>
-      <div>{`${(fileSize / 1024).toFixed(2)}kb`}</div>
+      <div>File Size: {`${(fileSize / 1024).toFixed(2)}kb`}</div>
+      <div>Tokens: {`${tokensConsumed}`}</div>
       <div>
         <h1 className="mb-2">Lore Spire PoC</h1>
         {apiKeyButtonContent}
@@ -127,15 +166,7 @@ function App() {
       <div>
         <ul>{fileNameDisplay}</ul>
       </div>
-      <div>
-        <input
-          type="file"
-          accept=".txt,.json,.md"
-          onChange={handleFileUpload}
-          multiple
-        />
-      </div>
-      {uploadFilesContent}
+      {fileChatContent}
     </>
   );
 }

@@ -78,3 +78,9 @@ ul li {
 .pt-4 {
   padding-top: 1rem;
 }
+
+textarea {
+  resize: none;
+  width: 100%;
+  min-height: 200px;
+}
