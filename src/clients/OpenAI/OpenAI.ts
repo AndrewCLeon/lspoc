@@ -30,6 +30,7 @@ export class OpenAIAgent {
     const payload: IOpenAIPayload = {
       model: this.model,
       messages: this.chatHistory,
+      temperature: 0,
     };
     const response = await OpenAIBaseClient.getModelResponse(payload, options);
     this.chatHistory.push({
