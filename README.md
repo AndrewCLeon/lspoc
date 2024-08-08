@@ -1,6 +1,6 @@
 # PoC - Proof of concept
 
-Install node v22 using [nvm]()
+Install node v22 using [nvm](https://github.com/nvm-sh/nvm)
 
 ```shell
 nvm install 22
