@@ -111,6 +111,8 @@ function App() {
   const handleSendChat = async () => {
     const userInput = textAreaRef.current?.value ?? "";
 
+    textAreaRef.current!.value = "Prompting...";
+
     const fileContentContext = fileContent.join("\n");
     const agent = new OpenAIAgent(fileContentContext);
     const { 0: response, 1: tokens } = await agent.getModelResponse(
