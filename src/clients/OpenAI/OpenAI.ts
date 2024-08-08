@@ -12,8 +12,12 @@ export class OpenAIAgent {
     ];
   }
 
-  private model: string = "gpt-3.5-turbo";
+  private model: string = "gpt-4";
   private chatHistory: IOpenAIChatMessage[] = [];
+
+  public async setModel(model: string) {
+    this.model = model;
+  }
 
   public async getModelResponse(
     prompt: string,

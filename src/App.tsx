@@ -160,6 +160,9 @@ function App() {
       <div>File Size: {`${(fileSize / 1024).toFixed(2)}kb`}</div>
       <div>Tokens: {`${tokensConsumed}`}</div>
       <div>
+        Estimated Costs: ${`${((tokensConsumed / 1000) * 0.02).toFixed(3)}`}
+      </div>
+      <div>
         <h1 className="mb-2">Lore Spire PoC</h1>
         {apiKeyButtonContent}
       </div>
