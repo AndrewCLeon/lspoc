@@ -54,7 +54,18 @@ function App() {
   const handleFileSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
     // I need to ensure that the file is not uploaded twice
     const requestedFiles = Array.from(event.target.files ?? []);
-    const uniqueUploadNames = new Set(requestedFiles.map((f) => f.name));
+
+    const requestedFilesOfSize = requestedFiles.filter((f) => {
+      if (f.size < 20000) {
+        return true;
+      } else {
+        confirm(
+          `File is too large: ${f.name} Please upload a file less than 20kb`
+        );
+        return false;
+      }
+    });
+    const uniqueUploadNames = new Set(requestedFilesOfSize.map((f) => f.name));
 
     const stateUpdate = Object.keys(selectedNoteFiles).reduce((acc, key) => {
       if (!uniqueUploadNames.has(key)) {
@@ -63,7 +74,7 @@ function App() {
       return acc;
     }, {} as Record<string, File>);
 
-    requestedFiles.forEach((file) => {
+    requestedFilesOfSize.forEach((file) => {
       stateUpdate[file.name] = file;
     });
 
@@ -130,7 +141,7 @@ function App() {
       <div>
         <input
           type="file"
-          accept=".txt,.json,.md"
+          accept=".txt,.json,.md,.pdf"
           onChange={handleFileSelection}
           multiple
         />
