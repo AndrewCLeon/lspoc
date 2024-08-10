@@ -2,6 +2,10 @@
   position: fixed !important;
   top: 0 !important;
 
+  & span {
+    cursor: pointer;
+  }
+
   & nav {
     background-color: #d72638;
   }

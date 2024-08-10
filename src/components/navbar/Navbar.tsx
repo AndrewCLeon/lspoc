@@ -25,22 +25,19 @@ export const Navbar: React.FC = () => {
 
   const setKeyContent = React.useMemo(() => {
     if (apiKeyAvailable) return null;
-    return (
-      <li>
-        <span onClick={handleSetKey}>Set Key</span>
-      </li>
-    );
+    return <span onClick={handleSetKey}>Set Key</span>;
   }, [apiKeyAvailable]);
 
+  const navigateToHome = () => navigate("/");
   const navigateToFiles = () => navigate("/files/upload");
 
   return (
     <div className="navbar-fixed">
       <nav>
         <div className="nav-wrapper">
-          <a href="#" className="brand-logo pl-4">
+          <span className="brand-logo pl-4" onClick={navigateToHome}>
             Lore Squire
-          </a>
+          </span>
           <ul id="nav-mobile" className="right hide-on-med-and-down">
             <li>{setKeyContent}</li>
             <li>
