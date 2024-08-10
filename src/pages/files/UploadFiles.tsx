@@ -16,16 +16,20 @@ export const UploadFiles: React.FC = () => {
 
   const [remoteFiles, setRemoteFiles] = React.useState<FileObject[]>([]);
 
+  const refreshFiles = () => {
+    const agent = new OpenAIAgent("");
+    agent.getFiles().then((files) => {
+      setRemoteFiles(files.data);
+    });
+  };
+
   // Initialize materialize js
   React.useEffect(() => {
     M.AutoInit();
   }, []);
 
   React.useEffect(() => {
-    const agent = new OpenAIAgent("");
-    agent.getFiles().then((files) => {
-      setRemoteFiles(files.data);
-    });
+    refreshFiles();
   }, []);
 
   React.useEffect(() => {
@@ -58,17 +62,7 @@ export const UploadFiles: React.FC = () => {
     // I need to ensure that the file is not uploaded twice
     const requestedFiles = Array.from(event.target.files ?? []);
 
-    const requestedFilesOfSize = requestedFiles.filter((f) => {
-      if (f.size < 20000) {
-        return true;
-      } else {
-        confirm(
-          `File is too large: ${f.name} Please upload a file less than 20kb`
-        );
-        return false;
-      }
-    });
-    const uniqueUploadNames = new Set(requestedFilesOfSize.map((f) => f.name));
+    const uniqueUploadNames = new Set(requestedFiles.map((f) => f.name));
 
     const stateUpdate = Object.keys(selectedNoteFiles).reduce((acc, key) => {
       if (!uniqueUploadNames.has(key)) {
@@ -77,7 +71,7 @@ export const UploadFiles: React.FC = () => {
       return acc;
     }, {} as Record<string, File>);
 
-    requestedFilesOfSize.forEach((file) => {
+    requestedFiles.forEach((file) => {
       stateUpdate[file.name] = file;
     });
 
@@ -88,20 +82,22 @@ export const UploadFiles: React.FC = () => {
     <li key={fileName}>{fileName}</li>
   ));
 
-  const readFilesIntoMemory = async () => {
-    const fileData = await Promise.all(
+  const handleFilesUpload = async () => {
+    const agent = new OpenAIAgent("");
+    await Promise.all(
       Object.keys(selectedNoteFiles).map((fileName) => {
-        return extractData(selectedNoteFiles[fileName]);
+        return agent.uploadFile(selectedNoteFiles[fileName]);
       })
     );
 
-    setFileContent(fileData);
+    setSelectedNoteFiles({});
+    refreshFiles();
   };
 
   const uploadFilesContent = !Object.keys(selectedNoteFiles).length ? null : (
     <>
       <div className="pt-4">
-        <button onClick={readFilesIntoMemory}>
+        <button onClick={handleFilesUpload}>
           Upload ({`${Object.keys(selectedNoteFiles).length}`}) Files
         </button>
       </div>
@@ -149,6 +145,7 @@ export const UploadFiles: React.FC = () => {
         <td>{file.id}</td>
         <td>{file.filename}</td>
         <td>{file.purpose}</td>
+        <td>{(file.bytes / 1024).toFixed(2)}kb</td>
         <td>{new Date(file.created_at * 1000).toISOString()}</td>
       </tr>
     );
@@ -170,6 +167,7 @@ export const UploadFiles: React.FC = () => {
             <th>Id</th>
             <th>Name</th>
             <th>Purpose</th>
+            <th>Size</th>
             <th>Creation Date</th>
           </tr>
         </thead>
