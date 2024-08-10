@@ -9,7 +9,6 @@ export const UploadFiles: React.FC = () => {
 
   // When a file is uploaded, read the file and extract the data
   const [fileSize, setFileSize] = React.useState<number>(0);
-  const [fileContent, setFileContent] = React.useState<string[]>([]);
   const [selectedNoteFiles, setSelectedNoteFiles] = React.useState<
     Record<string, File>
   >({});
@@ -39,24 +38,6 @@ export const UploadFiles: React.FC = () => {
 
     setFileSize(totalSize);
   }, [selectedNoteFiles]);
-
-  const extractData = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result;
-        if (result) {
-          resolve(result as string);
-        } else {
-          reject(new Error("Failed to read file"));
-        }
-      };
-      reader.onerror = () => {
-        reject(new Error("Failed to read file"));
-      };
-      reader.readAsText(file);
-    });
-  };
 
   const handleFileSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
     // I need to ensure that the file is not uploaded twice
@@ -104,20 +85,7 @@ export const UploadFiles: React.FC = () => {
     </>
   );
 
-  const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
-  const handleSendChat = async () => {
-    const userInput = textAreaRef.current?.value ?? "";
-
-    textAreaRef.current!.value = "Prompting...";
-
-    const fileContentContext = fileContent.join("\n");
-    const agent = new OpenAIAgent(fileContentContext);
-    const { 0: response } = await agent.getModelResponse(userInput, {});
-
-    textAreaRef.current!.value = response;
-  };
-
-  const fileChatContent = !fileContent.length ? (
+  const fileSelectionContent = (
     <>
       <div>
         <input
@@ -129,14 +97,6 @@ export const UploadFiles: React.FC = () => {
       </div>
       {uploadFilesContent}
     </>
-  ) : (
-    <div>
-      <h2>Chat</h2>
-      <div>
-        <button onClick={handleSendChat}>Send</button>
-        <textarea ref={textAreaRef}></textarea>
-      </div>
-    </div>
   );
 
   const fileRows = remoteFiles.map((file) => {
@@ -160,7 +120,7 @@ export const UploadFiles: React.FC = () => {
       <div>
         <ul>{fileNameDisplay}</ul>
       </div>
-      {fileChatContent}
+      {fileSelectionContent}
       <table className="striped">
         <thead>
           <tr>
