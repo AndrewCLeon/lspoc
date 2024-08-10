@@ -1,7 +1,7 @@
+import OpenAI from "openai";
 import { OpenAIBaseClient } from "./OpenAIBaseClient";
 
 export class OpenAIAgent {
-  static API_KEY: string = "";
   // Initialize the agent
   constructor(basePrompt: string) {
     const prompts: string[] = [
@@ -18,6 +18,14 @@ export class OpenAIAgent {
         content: prompts.join("\n"),
       },
     ];
+  }
+
+  static client: OpenAI;
+  static setApiKey(key: string) {
+    OpenAIAgent.client = new OpenAI({
+      apiKey: key,
+      dangerouslyAllowBrowser: true,
+    });
   }
 
   private model: string = "gpt-4";
@@ -46,5 +54,18 @@ export class OpenAIAgent {
       content: response[0],
     });
     return [response[0], response[1]];
+  }
+
+  public async uploadFile(file: File): Promise<string> {
+    const response = await OpenAIAgent.client.files.create({
+      file: file,
+      purpose: "assistants",
+    });
+
+    return response.id;
+  }
+
+  public async getFiles() {
+    return OpenAIAgent.client.files.list();
   }
 }

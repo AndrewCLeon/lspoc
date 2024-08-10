@@ -85,7 +85,7 @@ export const UploadFiles: React.FC = () => {
     setHideApiKeyButton(apiKey ?? "");
 
     OpenAIBaseClient.API_KEY = apiKey ?? "";
-    OpenAIAgent.API_KEY = apiKey ?? "";
+    OpenAIAgent.setApiKey(apiKey ?? "");
   };
 
   const apiKeyButtonContent = hideApiKeyButton ? null : (

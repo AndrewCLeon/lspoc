@@ -2,8 +2,11 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
+import { OpenAIAgent } from "./clients/OpenAI/OpenAI.ts";
 import "materialize-css/dist/css/materialize.min.css";
 import "./index.css";
+
+(window as any).OpenAI = OpenAIAgent;
 
 // Stages: PoC -> MVP -> v1
 // PoC:

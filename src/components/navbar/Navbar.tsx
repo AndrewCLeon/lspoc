@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
-import "./Navbar.scss";
 import { useNavigate } from "react-router";
+import { OpenAIAgent } from "../../clients/OpenAI/OpenAI";
+import { OpenAIBaseClient } from "../../clients/OpenAI/OpenAIBaseClient";
+import "./Navbar.scss";
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
@@ -10,6 +12,8 @@ export const Navbar: React.FC = () => {
   useEffect(() => {
     const key = localStorage.getItem("API_KEY");
     if (key) {
+      OpenAIAgent.setApiKey(key);
+      OpenAIBaseClient.API_KEY = key;
       setApiKeyAvailable(true);
     }
   }, []);
