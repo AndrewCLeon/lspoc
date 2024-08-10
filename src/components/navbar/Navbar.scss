@@ -1,5 +1,8 @@
-.lspoc-navbar {
-  position: fixed;
-  top: 0;
-  background-color: #d72638;
+.navbar-fixed {
+  position: fixed !important;
+  top: 0 !important;
+
+  & nav {
+    background-color: #d72638;
+  }
 }
