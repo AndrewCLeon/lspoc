@@ -18,6 +18,10 @@
   width: 100%;
 }
 
+.p-0 {
+  padding: 0 !important;
+}
+
 .pl-4 {
   padding-left: 1rem !important;
 }
@@ -92,4 +96,8 @@ textarea {
   resize: none;
   width: 100%;
   min-height: 200px;
+}
+
+.container {
+  margin-top: 64px;
 }
