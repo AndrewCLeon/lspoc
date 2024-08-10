@@ -1,6 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
+import { BrowserRouter } from "react-router-dom";
+import { Routes } from "./pages/index.tsx";
+import "materialize-css/dist/css/materialize.min.css";
 import "./index.css";
 
 // Stages: PoC -> MVP -> v1
@@ -16,7 +19,7 @@ import "./index.css";
 
 // -
 
-// TODO: [  ] - Configure materialize.css
+// TODO: [✅] - Configure materialize.css
 // TODO: [  ] - Configure material icons (some icons package)
 // TODO: [  ] - Add ability to upload a file (notes)
 // TODO: [  ] - Keep track of uploaded files
@@ -24,6 +27,9 @@ import "./index.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <BrowserRouter basename="lspoc">
+      {/* <App /> */}
+      <Routes />
+    </BrowserRouter>
   </StrictMode>
 );
