@@ -1,5 +1,6 @@
 import { Navbar } from "./components/navbar/Navbar";
 import { Routes } from "./pages";
+import { FabCollection } from "./components/fabCollection/FabCollection";
 import "./App.css";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
       <div className="container">
         <Routes />
       </div>
+      <FabCollection />
     </>
   );
 }

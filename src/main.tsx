@@ -4,6 +4,8 @@ import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { OpenAIAgent } from "./clients/OpenAI/OpenAI.ts";
 import "materialize-css/dist/css/materialize.min.css";
+import "materialize-css/dist/js/materialize.min.js";
+import "material-design-icons/iconfont/material-icons.css";
 import "./index.css";
 
 (window as any).OpenAI = OpenAIAgent;

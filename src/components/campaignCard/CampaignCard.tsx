@@ -14,13 +14,13 @@ export const CampaignCard: React.FC<CampaignCardProps> = (props) => {
 
   const actionButton = (
     <a className="btn-floating halfway-fab waves-effect waves-light red">
-      <i className="material-icons">4</i>
+      <i className="material-icons">add</i>
     </a>
   );
 
   const bottomActions = (
     <div className="card-action">
-      <a href="#">This is a link</a>
+      <a href="#">View Campaign</a>
     </div>
   );
 

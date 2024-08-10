@@ -1,9 +1,6 @@
 import React from "react";
-import reactLogo from "../../assets/react.svg";
-import openAILogo from "../../assets/openai.svg";
-import viteLogo from "/vite.svg";
-import { OpenAIBaseClient } from "../../clients/OpenAI/OpenAIBaseClient";
 import { OpenAIAgent } from "../../clients/OpenAI/OpenAI";
+import { FileObject } from "openai/resources/files.mjs";
 import M from "materialize-css";
 
 export const UploadFiles: React.FC = () => {
@@ -11,17 +8,24 @@ export const UploadFiles: React.FC = () => {
   // Show the list of uploaded files
 
   // When a file is uploaded, read the file and extract the data
-  const [tokensConsumed, setTokensConsumed] = React.useState<number>(0);
   const [fileSize, setFileSize] = React.useState<number>(0);
   const [fileContent, setFileContent] = React.useState<string[]>([]);
   const [selectedNoteFiles, setSelectedNoteFiles] = React.useState<
     Record<string, File>
   >({});
-  const [hideApiKeyButton, setHideApiKeyButton] = React.useState<string>("");
+
+  const [remoteFiles, setRemoteFiles] = React.useState<FileObject[]>([]);
 
   // Initialize materialize js
   React.useEffect(() => {
     M.AutoInit();
+  }, []);
+
+  React.useEffect(() => {
+    const agent = new OpenAIAgent("");
+    agent.getFiles().then((files) => {
+      setRemoteFiles(files.data);
+    });
   }, []);
 
   React.useEffect(() => {
@@ -80,18 +84,6 @@ export const UploadFiles: React.FC = () => {
     setSelectedNoteFiles(stateUpdate);
   };
 
-  const handleOpenModal = async () => {
-    const apiKey = prompt("Enter OpenAI API Key");
-    setHideApiKeyButton(apiKey ?? "");
-
-    OpenAIBaseClient.API_KEY = apiKey ?? "";
-    OpenAIAgent.setApiKey(apiKey ?? "");
-  };
-
-  const apiKeyButtonContent = hideApiKeyButton ? null : (
-    <button onClick={handleOpenModal}>Set OpenAI API Key</button>
-  );
-
   const fileNameDisplay = Object.keys(selectedNoteFiles).map((fileName) => (
     <li key={fileName}>{fileName}</li>
   ));
@@ -106,16 +98,15 @@ export const UploadFiles: React.FC = () => {
     setFileContent(fileData);
   };
 
-  const uploadFilesContent =
-    !Object.keys(selectedNoteFiles).length || !hideApiKeyButton ? null : (
-      <>
-        <div className="pt-4">
-          <button onClick={readFilesIntoMemory}>
-            Upload ({`${Object.keys(selectedNoteFiles).length}`}) Files
-          </button>
-        </div>
-      </>
-    );
+  const uploadFilesContent = !Object.keys(selectedNoteFiles).length ? null : (
+    <>
+      <div className="pt-4">
+        <button onClick={readFilesIntoMemory}>
+          Upload ({`${Object.keys(selectedNoteFiles).length}`}) Files
+        </button>
+      </div>
+    </>
+  );
 
   const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
   const handleSendChat = async () => {
@@ -125,14 +116,9 @@ export const UploadFiles: React.FC = () => {
 
     const fileContentContext = fileContent.join("\n");
     const agent = new OpenAIAgent(fileContentContext);
-    const { 0: response, 1: tokens } = await agent.getModelResponse(
-      userInput,
-      {}
-    );
+    const { 0: response } = await agent.getModelResponse(userInput, {});
 
     textAreaRef.current!.value = response;
-
-    setTokensConsumed((prev) => prev + tokens);
   };
 
   const fileChatContent = !fileContent.length ? (
@@ -156,32 +142,39 @@ export const UploadFiles: React.FC = () => {
       </div>
     </div>
   );
+
+  const fileRows = remoteFiles.map((file) => {
+    return (
+      <tr key={file.id}>
+        <td>{file.id}</td>
+        <td>{file.filename}</td>
+        <td>{file.purpose}</td>
+        <td>{new Date(file.created_at * 1000).toISOString()}</td>
+      </tr>
+    );
+  });
+
   return (
     <div className="container">
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-        <a href="https://platform.openai.com/docs/overview" target="_blank">
-          <img src={openAILogo} className="logo OpenAI" alt="OpenAI logo" />
-        </a>
+        <h1 className="mb-2">My Files</h1>
       </div>
       <div>File Size: {`${(fileSize / 1024).toFixed(2)}kb`}</div>
-      <div>Tokens: {`${tokensConsumed}`}</div>
-      <div>
-        Estimated Costs: ${`${((tokensConsumed / 1000) * 0.02).toFixed(3)}`}
-      </div>
-      <div>
-        <h1 className="mb-2">Lore Squire PoC</h1>
-        {apiKeyButtonContent}
-      </div>
       <div>
         <ul>{fileNameDisplay}</ul>
       </div>
       {fileChatContent}
+      <table className="striped">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Purpose</th>
+            <th>Creation Date</th>
+          </tr>
+        </thead>
+        <tbody>{fileRows}</tbody>
+      </table>
     </div>
   );
 };
