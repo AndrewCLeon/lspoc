@@ -4,6 +4,7 @@ import openAILogo from "../../assets/openai.svg";
 import viteLogo from "/vite.svg";
 import { OpenAIBaseClient } from "../../clients/OpenAI/OpenAIBaseClient";
 import { OpenAIAgent } from "../../clients/OpenAI/OpenAI";
+import M from "materialize-css";
 
 export const UploadFiles: React.FC = () => {
   // Store the file in a list of uploaded files (by file name) and make it efficient (useReducer?)
