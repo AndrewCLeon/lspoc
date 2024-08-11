@@ -66,6 +66,6 @@ export class OpenAIAgent {
   }
 
   public async getFiles() {
-    return OpenAIAgent.client.files.list();
+    return OpenAIAgent.client?.files.list();
   }
 }
