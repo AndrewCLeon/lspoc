@@ -5,7 +5,7 @@
   width: 100%;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: rgb(210, 197, 197);
   background-color: #242424;
 
   font-synthesis: none;
@@ -16,6 +16,7 @@
 
 #root {
   width: 100%;
+  min-height: 100vh;
 }
 
 .p-0 {
@@ -100,4 +101,5 @@ textarea {
 
 .container {
   margin-top: 64px;
+  height: calc(100vh - 64px);
 }
