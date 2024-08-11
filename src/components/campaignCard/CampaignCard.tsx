@@ -2,6 +2,7 @@ import React from "react";
 import "./CampaignCard.scss";
 
 type CampaignCardProps = {
+  campaignId: string;
   title?: string;
   description?: string;
   image?: string;
@@ -20,7 +21,7 @@ export const CampaignCard: React.FC<CampaignCardProps> = (props) => {
 
   const bottomActions = (
     <div className="card-action">
-      <a href="#">View Campaign</a>
+      <a href={`/lspoc/campaign/${props.campaignId}`}>View Campaign</a>
     </div>
   );
 
