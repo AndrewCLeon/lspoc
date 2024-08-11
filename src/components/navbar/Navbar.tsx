@@ -45,10 +45,14 @@ export const Navbar: React.FC = () => {
           <ul id="nav-mobile" className="right hide-on-med-and-down">
             <li>{setKeyContent}</li>
             <li>
-              <a href="badges.html">Campaigns</a>
+              <a href="javascript:void(0)" onClick={navigateToHome}>
+                Campaigns
+              </a>
             </li>
             <li>
-              <a href="sass.html">Characters</a>
+              <a href="javascript:void(0)" onClick={navigateToHome}>
+                Characters
+              </a>
             </li>
             <li>
               <span onClick={navigateToFiles}>Files</span>

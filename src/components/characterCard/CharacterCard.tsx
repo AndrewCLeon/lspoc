@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router";
 
 type CharacterCardProps = {
   campaignId: string | undefined;
@@ -6,6 +7,7 @@ type CharacterCardProps = {
 };
 
 export const CharacterCard: React.FC<CharacterCardProps> = (props) => {
+  const navigate = useNavigate();
   return (
     <div className="card">
       <div className="card-content">
@@ -15,12 +17,20 @@ export const CharacterCard: React.FC<CharacterCardProps> = (props) => {
       </div>
       <div className="card-action">
         <a
-          href={`/lspoc/campaign/${props.campaignId}/${props.characterId}/chat`}
+          href="javascript:void(0)"
+          onClick={() =>
+            navigate(`/campaign/${props.campaignId}/${props.characterId}/chat`)
+          }
         >
           Chat
         </a>
         <a
-          href={`/lspoc/campaign/${props.campaignId}/${props.characterId}/files/upload`}
+          href="javascript:void(0)"
+          onClick={() =>
+            navigate(
+              `/campaign/${props.campaignId}/${props.characterId}/files/upload`
+            )
+          }
         >
           Add Files
         </a>

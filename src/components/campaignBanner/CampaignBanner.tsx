@@ -12,6 +12,7 @@ export const CampaignBanner: React.FC = () => {
       divRef.current!.style!.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/lspoc/${campaignId}.webp)`;
     }
   }, [campaignId]);
+
   return (
     <div ref={divRef} className="campaign-banner">
       <div className="campaign-banner-text">
