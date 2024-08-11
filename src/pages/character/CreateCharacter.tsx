@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { OpenAIAgent } from "../../clients/OpenAI/OpenAI";
 import { assistantInstructions } from "../../instructions/AI";
 import { FileUploader } from "../../components/fileUploader/FileUploader";
+import { CampaignBanner } from "../../components/campaignBanner/CampaignBanner";
 
 export const CreateCharacter: React.FC = () => {
   const navigate = useNavigate();
@@ -79,7 +80,7 @@ export const CreateCharacter: React.FC = () => {
 
   return (
     <div>
-      <h1>{campaignId}</h1>
+      <CampaignBanner />
       <div className="row">
         <div className="col s12">
           <p>Race: Half Elf</p>
