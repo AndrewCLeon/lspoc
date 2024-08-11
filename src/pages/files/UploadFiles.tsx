@@ -2,12 +2,17 @@ import React from "react";
 import { OpenAIAgent } from "../../clients/OpenAI/OpenAI";
 import { FileObject } from "openai/resources/files.mjs";
 import M from "materialize-css";
+import { useParams } from "react-router";
 
 export const UploadFiles: React.FC = () => {
   // Store the file in a list of uploaded files (by file name) and make it efficient (useReducer?)
   // Show the list of uploaded files
 
   // When a file is uploaded, read the file and extract the data
+  const { characterId } = useParams<{
+    campaignId: string;
+    characterId: string;
+  }>();
   const [fileSize, setFileSize] = React.useState<number>(0);
   const [selectedNoteFiles, setSelectedNoteFiles] = React.useState<
     Record<string, File>
@@ -18,7 +23,7 @@ export const UploadFiles: React.FC = () => {
   const refreshFiles = () => {
     const agent = new OpenAIAgent("");
     agent.getFiles().then((files) => {
-      setRemoteFiles(files.data);
+      setRemoteFiles(files?.data ?? []);
     });
   };
 
@@ -114,7 +119,7 @@ export const UploadFiles: React.FC = () => {
   return (
     <div className="container">
       <div>
-        <h1 className="mb-2">My Files</h1>
+        <h1 className="mb-2">{characterId} Files</h1>
       </div>
       <div>File Size: {`${(fileSize / 1024).toFixed(2)}kb`}</div>
       <div>
