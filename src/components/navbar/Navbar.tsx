@@ -1,36 +1,28 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router";
-import { OpenAIAgent } from "../../clients/OpenAI/OpenAI";
-import { OpenAIBaseClient } from "../../clients/OpenAI/OpenAIBaseClient";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions, authSelectors } from "../../store/reducers/auth";
 import "./Navbar.scss";
 
 export const Navbar: React.FC = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [apiKeyAvailable, setApiKeyAvailable] = React.useState<boolean>(false);
-
-  useEffect(() => {
-    const key = localStorage.getItem("API_KEY");
-    if (key) {
-      OpenAIAgent.setApiKey(key);
-      OpenAIBaseClient.API_KEY = key;
-      setApiKeyAvailable(true);
-    }
-  }, []);
+  const isKeySet = useSelector(authSelectors.isKeySet);
 
   const handleSetKey = () => {
-    const key = prompt("Enter your API key");
-    if (!key) return;
+    const key = prompt("Please enter your API Key");
+    if (key) {
+      localStorage.setItem("API_KEY", key);
 
-    // Set the key in local storage
-    localStorage.setItem("API_KEY", key);
-    setApiKeyAvailable(true);
+      dispatch(authActions.setKey(key));
+    }
   };
 
   const setKeyContent = React.useMemo(() => {
-    if (apiKeyAvailable) return null;
+    if (isKeySet) return null;
     return <span onClick={handleSetKey}>Set Key</span>;
-  }, [apiKeyAvailable]);
+  }, [isKeySet]);
 
   const navigateToHome = () => navigate("/");
   const navigateToFiles = () => navigate("/files/upload");
