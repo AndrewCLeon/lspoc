@@ -49,6 +49,11 @@ export const Navbar: React.FC = () => {
             <li>
               <span onClick={navigateToFiles}>Files</span>
             </li>
+            <li>
+              <a href="javascript:void(0)" onClick={navigateToHome}>
+                Gallery
+              </a>
+            </li>
           </ul>
         </div>
       </nav>
