@@ -4,6 +4,7 @@ import { Home } from "./home/Home";
 import { ViewCampaign } from "./campaign/ViewCampaign";
 import { CreateCharacter } from "./character/CreateCharacter";
 import { UploadFiles } from "./files/UploadFiles";
+import { CharacterChat } from "../components/characterChat/CharacterChat";
 
 export const Routes: React.FC = () => {
   return (
@@ -13,6 +14,10 @@ export const Routes: React.FC = () => {
       <Route
         path="/campaign/:campaignId/characters/create"
         element={<CreateCharacter />}
+      />
+      <Route
+        path="/campaign/:campaignId/:characterId/chat"
+        element={<CharacterChat />}
       />
       <Route
         path="/campaign/:campaignId/:characterId/files/upload"
