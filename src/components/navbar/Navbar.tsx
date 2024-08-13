@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { authActions, authSelectors } from "../../store/reducers/auth";
+import { authActions, authSelectors } from "../../store/slices/auth/auth";
 import "./Navbar.scss";
 
 export const Navbar: React.FC = () => {
