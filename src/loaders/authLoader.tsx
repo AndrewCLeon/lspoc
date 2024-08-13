@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { authActions, authSelectors } from "../store/reducers/auth";
+import { authActions, authSelectors } from "../store/slices/auth/auth";
 import { OpenAIAgent } from "../clients/OpenAI/OpenAI";
 import { OpenAIBaseClient } from "../clients/OpenAI/OpenAIBaseClient";
 
