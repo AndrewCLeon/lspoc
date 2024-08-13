@@ -36,19 +36,19 @@ export const CampaignCard: React.FC<CampaignCardProps> = (props) => {
 
   return (
     <div className="card p-0">
-      <a
-        href="javascript:void(0)"
-        onClick={() => navigate(`/campaign/${props.campaignId}`)}
-      >
-        <div className="card-image">
+      <div className="card-image">
+        <a
+          href="javascript:void(0)"
+          onClick={() => navigate(`/campaign/${props.campaignId}`)}
+        >
           <img src={props.image} />
-          {title}
-          {actionButton}
-        </div>
-        <div className="card-content">
-          <p>{props.description}</p>
-        </div>
-      </a>
+        </a>
+        {title}
+        {actionButton}
+      </div>
+      <div className="card-content">
+        <p>{props.description}</p>
+      </div>
       {bottomActions}
     </div>
   );
