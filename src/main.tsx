@@ -12,6 +12,8 @@ import "./index.css";
 
 (window as any).OpenAI = OpenAIAgent;
 
+(window as any).store = store;
+
 // Stages: PoC -> MVP -> v1
 // PoC:
 // - WebSite hosted
