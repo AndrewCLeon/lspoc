@@ -1,15 +1,15 @@
 import { Navbar } from "./components/navbar/Navbar";
 import { Routes } from "./pages";
-import { FabCollection } from "./components/fabCollection/FabCollection";
 import { AuthLoader } from "./loaders/authLoader";
+import { CharacterLoader } from "./loaders/characterLoader";
+import { FabCollection } from "./components/fabCollection/FabCollection";
 import "./App.css";
 
 function App() {
-  // Migrate this to some kind of loader component
-
   return (
     <>
       <AuthLoader />
+      <CharacterLoader />
       <Navbar />
       <div className="container">
         <Routes />
