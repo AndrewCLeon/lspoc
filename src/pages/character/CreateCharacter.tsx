@@ -1,11 +1,15 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { OpenAIAgent } from "../../clients/OpenAI/OpenAI";
 import { assistantInstructions } from "../../instructions/AI";
 import { FileUploader } from "../../components/fileUploader/FileUploader";
 import { CampaignBanner } from "../../components/campaignBanner/CampaignBanner";
+import { characterActions } from "../../store/slices/characters/characters";
+import { v4 as uuid } from "uuid";
 
 export const CreateCharacter: React.FC = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { campaignId } = useParams<{ campaignId: string }>();
 
@@ -17,6 +21,8 @@ export const CreateCharacter: React.FC = () => {
   const inputRef = React.createRef<HTMLInputElement>();
 
   const handleCharacterCreation = async () => {
+    if (!campaignId) return;
+
     // Create assistant
     // Associate assistant to campaign
     setCreating(true);
@@ -58,19 +64,18 @@ export const CreateCharacter: React.FC = () => {
           },
         },
       });
-
-      // Update local storage with assistant id, vector store id
     }
 
-    const campaignData = JSON.parse(
-      localStorage.getItem(campaignId ?? "") ?? "{}"
+    dispatch(
+      characterActions.addCharacter({
+        characterId: uuid(),
+        assistantId: assistant.id,
+        campaign: campaignId,
+        name: requestedCharacterName,
+        vectorStoreId: vectorStore?.id,
+      })
     );
-    campaignData[requestedCharacterName] = {
-      assistantId: assistant.id,
-      vectorStoreId: vectorStore?.id,
-    };
 
-    localStorage.setItem(campaignId ?? "", JSON.stringify(campaignData));
     navigate(`/campaign/${campaignId}`);
   };
 
