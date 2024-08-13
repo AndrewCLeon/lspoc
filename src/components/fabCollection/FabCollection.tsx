@@ -1,18 +1,22 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { characterSelectors } from "../../store/slices/characters/characters";
 // import "./FabCollection.css";
 
 const FabCollection: React.FC = () => {
+  const allCharacters = useSelector(characterSelectors.getAllCharacters);
+
   React.useEffect(() => {
     M.AutoInit();
   }, []);
 
-  const chatBubbles = ["a", "b", "c"].map((personaName) => {
+  const chatBubbles = allCharacters.map((character) => {
     return (
-      <li key={personaName}>
+      <li key={character.assistantId}>
         <a className="btn-floating red">
           <img
             src={"https://www.w3schools.com/howto/img_avatar.png"}
-            alt={personaName}
+            alt={character.name}
             className="responsive-img circle fab-image"
           />
           <i></i>
