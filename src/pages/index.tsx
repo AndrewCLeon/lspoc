@@ -1,30 +1,21 @@
 import React from "react";
 import { Routes as Switch, Route } from "react-router-dom";
 import { Home } from "./home/Home";
+import { Login } from "./login/Login";
 import { ViewCampaign } from "./campaign/ViewCampaign";
-import { CreateCharacter } from "./character/CreateCharacter";
-import { UploadFiles } from "./files/UploadFiles";
-import { CharacterChat } from "../components/characterChat/CharacterChat";
+import { NotFound } from "./404/NotFound";
 
 export const Routes: React.FC = () => {
   return (
     <Switch>
-      <Route path="/" element={<Home />} />
-      <Route path="/campaign/:campaignId" element={<ViewCampaign />} />
-      <Route
-        path="/campaign/:campaignId/characters/create"
-        element={<CreateCharacter />}
-      />
-      <Route
-        path="/campaign/:campaignId/:characterId/chat"
-        element={<CharacterChat />}
-      />
-      <Route
-        path="/campaign/:campaignId/:characterId/files/upload"
-        element={<UploadFiles />}
-      />
-      <Route path="/character/create" element={<CreateCharacter />} />
-      <Route path="/files/upload" element={<UploadFiles />} />
+      <Route path="">
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/campaign/:campaignId">
+          <Route path="" element={<ViewCampaign />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Route>
     </Switch>
   );
 };
