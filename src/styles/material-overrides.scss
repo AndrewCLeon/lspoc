@@ -1,0 +1,14 @@
+ul li {
+  list-style: none;
+}
+
+textarea {
+  resize: none;
+  width: 100%;
+  min-height: 200px;
+}
+
+.container {
+  margin-top: 64px;
+  height: calc(100vh - 64px);
+}

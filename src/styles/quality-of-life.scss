@@ -1,0 +1,47 @@
+// A scss mixin to apply the quality of life styles
+// Starting with padding and margin (p-1, p-2, p-3... pr-1, pr-2, pr-3..., pl-1, pl-2, pl-3..., m-1, m-2, m-3..., mr-1, mr-2, mr-3..., ml-1, ml-2, ml-3...)
+
+$base-size: 0.5;
+
+@mixin padding-qol {
+  @for $i from 1 through 8 {
+    .p-#{$i} {
+      padding: #{$i * $base-size}rem;
+    }
+    .pt-#{$i} {
+      padding-top: #{$i * $base-size}rem;
+    }
+    .pb-#{$i} {
+      padding-bottom: #{$i * $base-size}rem;
+    }
+    .pl-#{$i} {
+      padding-left: #{$i * $base-size}rem;
+    }
+    .pr-#{$i} {
+      padding-right: #{$i * $base-size}rem;
+    }
+  }
+}
+
+@mixin margin-qol {
+  @for $i from 1 through 8 {
+    .m-#{$i} {
+      margin: #{$i * $base-size}rem;
+    }
+    .mt-#{$i} {
+      margin-top: #{$i * $base-size}rem;
+    }
+    .mb-#{$i} {
+      margin-bottom: #{$i * $base-size}rem;
+    }
+    .mr-#{$i} {
+      margin-right: #{$i * $base-size}rem;
+    }
+    .ml-#{$i} {
+      margin-left: #{$i * $base-size}rem;
+    }
+  }
+}
+
+@include padding-qol;
+@include margin-qol;

@@ -1,7 +1,11 @@
+@import url("./styles/quality-of-life.scss");
+@import url("./styles/material-overrides.scss");
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  font-size: 16px;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   width: 100%;
 
   color-scheme: light dark;
@@ -66,27 +70,4 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-ul li {
-  list-style: none;
-}
-
-.pt-2 {
-  padding-top: 0.5rem;
-}
-
-.pt-4 {
-  padding-top: 1rem;
-}
-
-textarea {
-  resize: none;
-  width: 100%;
-  min-height: 200px;
-}
-
-.container {
-  margin-top: 64px;
-  height: calc(100vh - 64px);
 }
