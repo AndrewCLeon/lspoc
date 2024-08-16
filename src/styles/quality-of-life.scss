@@ -4,41 +4,41 @@
 $base-size: 0.5;
 
 @mixin padding-qol {
-  @for $i from 1 through 8 {
+  @for $i from 0 through 8 {
     .p-#{$i} {
-      padding: #{$i * $base-size}rem;
+      padding: #{$i * $base-size}rem !important;
     }
     .pt-#{$i} {
-      padding-top: #{$i * $base-size}rem;
+      padding-top: #{$i * $base-size}rem !important;
     }
     .pb-#{$i} {
-      padding-bottom: #{$i * $base-size}rem;
+      padding-bottom: #{$i * $base-size}rem !important;
     }
     .pl-#{$i} {
-      padding-left: #{$i * $base-size}rem;
+      padding-left: #{$i * $base-size}rem !important;
     }
     .pr-#{$i} {
-      padding-right: #{$i * $base-size}rem;
+      padding-right: #{$i * $base-size}rem !important;
     }
   }
 }
 
 @mixin margin-qol {
-  @for $i from 1 through 8 {
+  @for $i from 0 through 8 {
     .m-#{$i} {
-      margin: #{$i * $base-size}rem;
+      margin: #{$i * $base-size}rem !important;
     }
     .mt-#{$i} {
-      margin-top: #{$i * $base-size}rem;
+      margin-top: #{$i * $base-size}rem !important;
     }
     .mb-#{$i} {
-      margin-bottom: #{$i * $base-size}rem;
+      margin-bottom: #{$i * $base-size}rem !important;
     }
     .mr-#{$i} {
-      margin-right: #{$i * $base-size}rem;
+      margin-right: #{$i * $base-size}rem !important;
     }
     .ml-#{$i} {
-      margin-left: #{$i * $base-size}rem;
+      margin-left: #{$i * $base-size}rem !important;
     }
   }
 }
