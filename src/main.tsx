@@ -8,10 +8,9 @@ import store from "./store/store.ts";
 import "materialize-css/dist/css/materialize.min.css";
 import "materialize-css/dist/js/materialize.min.js";
 import "material-design-icons/iconfont/material-icons.css";
-import "./index.css";
+import "./index.scss";
 
 (window as any).OpenAI = OpenAIAgent;
-
 (window as any).store = store;
 
 // Stages: PoC -> MVP -> v1
@@ -32,6 +31,39 @@ import "./index.css";
 // TODO: [  ] - Add ability to upload a file (notes)
 // TODO: [  ] - Keep track of uploaded files
 // TODO: [  ] - Process uploaded files
+
+/*
+    Components
+        Navbar (HoC)
+            BreadCrumbs
+            LoreSquire Book
+            Hamburger
+        Common
+            Container? (For padding around content (to stay consistent with the rest of the app))
+            "Add"/+ Button/Icon circle
+            Button (Ok, Save, Cancel) (Primary, Secondary, Danger)
+            
+            Checkbox (Left and Right label)
+            
+            Input (Text, Number)
+
+            DropDown
+                Character Selector
+            Adventure Card
+
+            Entry ListItem Container
+                Entry ListItem
+            
+            Modal Container
+                Add Character Modal
+                Add Adventure Modal
+                Create Character Modal
+        Pages
+            Login
+            Home
+            Adventure
+
+*/
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
