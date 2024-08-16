@@ -43,12 +43,12 @@ export const Login: React.FC = () => {
   return (
     <div className="container">
       <div className="row">
-        <div className="col s8 offset-s2">
+        <div className="col s4 offset-s4">
           <h1 className="center-align">Lore Vault</h1>
         </div>
       </div>
       <div className="row">
-        <div className="input-field col s6 offset-s3">
+        <div className="input-field col s4 offset-s4">
           <input
             id="username"
             type="text"
@@ -61,7 +61,7 @@ export const Login: React.FC = () => {
         </div>
       </div>
       <div className="row">
-        <div className="input-field col s6 offset-s3">
+        <div className="input-field col s4 offset-s4">
           <input
             id="password"
             type="password"
@@ -73,7 +73,7 @@ export const Login: React.FC = () => {
         </div>
       </div>
       <div className="row">
-        <div className="center-align col s8 offset-s2">
+        <div className="center-align col s4 offset-s4">
           <button
             name="action"
             type="submit"
