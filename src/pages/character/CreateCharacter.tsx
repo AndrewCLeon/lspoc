@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { OpenAIAgent } from "../../clients/OpenAI/OpenAI";
 import { assistantInstructions } from "../../instructions/AI";
 import { FileUploader } from "../../components/fileUploader/FileUploader";
-import { CampaignBanner } from "../../components/campaignBanner/CampaignBanner";
+import { CampaignBanner } from "../../components/campaign/banner/CampaignBanner";
 import { characterActions } from "../../store/slices/characters/characters";
 import { v4 as uuid } from "uuid";
 

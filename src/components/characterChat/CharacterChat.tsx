@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { CampaignBanner } from "../campaignBanner/CampaignBanner";
+import { CampaignBanner } from "../campaign/banner/CampaignBanner";
 
 export const CharacterChat: React.FC = () => {
   const { characterId } = useParams<{ characterId: string }>();

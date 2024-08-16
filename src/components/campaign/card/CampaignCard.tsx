@@ -1,12 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router";
+import { CardAction } from "./action/CardAction";
 import "./CampaignCard.scss";
 
 type CampaignCardProps = {
   campaignId: string;
   title?: string;
-  description?: string;
   image?: string;
+  actionIcon?: string;
 };
 
 export const CampaignCard: React.FC<CampaignCardProps> = (props) => {
@@ -15,23 +16,27 @@ export const CampaignCard: React.FC<CampaignCardProps> = (props) => {
     <span className="card-title">{props.title}</span>
   );
 
-  const actionButton = (
-    <a className="btn-floating halfway-fab waves-effect waves-light red">
-      <i className="material-icons">add</i>
-    </a>
-  );
+  const actionButton = React.useMemo(() => {
+    return !props.actionIcon ? null : (
+      <a className="btn-floating halfway-fab waves-effect waves-light red">
+        <i className="material-icons">{props.actionIcon}</i>
+      </a>
+    );
+  }, [props.actionIcon]);
+
+  const handleCampaignOpen = () => {
+    navigate(`/campaign/${props.campaignId}`);
+  };
+
+  const handleCampaignDelete = () => {
+    navigate(`/campaign/${props.campaignId}/characters/create`);
+  };
 
   const bottomActions = (
-    <div className="card-action">
-      <a
-        href="javascript:void(0)"
-        onClick={() =>
-          navigate(`/campaign/${props.campaignId}/characters/create`)
-        }
-      >
-        Create Character
-      </a>
-    </div>
+    <>
+      <CardAction text="Open" onClick={handleCampaignOpen} />
+      <CardAction text="Delete" onClick={handleCampaignDelete} />
+    </>
   );
 
   return (
@@ -45,9 +50,6 @@ export const CampaignCard: React.FC<CampaignCardProps> = (props) => {
         </a>
         {title}
         {actionButton}
-      </div>
-      <div className="card-content">
-        <p>{props.description}</p>
       </div>
       {bottomActions}
     </div>

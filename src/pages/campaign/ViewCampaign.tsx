@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
-import { CampaignBanner } from "../../components/campaignBanner/CampaignBanner";
+import { CampaignBanner } from "../../components/campaign/banner/CampaignBanner";
 import { CharacterCard } from "../../components/characterCard/CharacterCard";
 import { characterSelectors } from "../../store/slices/characters/characters";
 
