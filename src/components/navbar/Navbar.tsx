@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActions, authSelectors } from "../../store/slices/auth/auth";
 import "./Navbar.scss";
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  children: React.ReactNode;
+}
+
+export const Navbar: React.FC<NavbarProps> = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -25,38 +29,27 @@ export const Navbar: React.FC = () => {
   }, [isKeySet]);
 
   const navigateToHome = () => navigate("/");
-  const navigateToFiles = () => navigate("/files/upload");
 
   return (
-    <div className="navbar-fixed">
-      <nav>
-        <div className="nav-wrapper">
-          <span className="brand-logo pl-4" onClick={navigateToHome}>
-            Lore Squire
-          </span>
-          <ul id="nav-mobile" className="right hide-on-med-and-down">
-            <li>{setKeyContent}</li>
-            <li>
-              <a href="javascript:void(0)" onClick={navigateToHome}>
-                Campaigns
-              </a>
-            </li>
-            <li>
-              <a href="javascript:void(0)" onClick={navigateToHome}>
-                Characters
-              </a>
-            </li>
-            <li>
-              <span onClick={navigateToFiles}>Files</span>
-            </li>
-            <li>
-              <a href="javascript:void(0)" onClick={navigateToHome}>
-                Gallery
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </div>
+    <>
+      <div className="navbar-fixed pb-8">
+        <nav>
+          <div className="nav-wrapper">
+            <span className="brand-logo pl-2" onClick={navigateToHome}>
+              Lore Vault
+            </span>
+            <ul id="nav-mobile" className="right hide-on-med-and-down">
+              <li>{setKeyContent}</li>
+              <li>
+                <a className="dropdown-trigger" data-target="dropdown1">
+                  <i className="material-icons right">menu</i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+      {props.children}
+    </>
   );
 };
