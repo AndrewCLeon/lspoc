@@ -1,6 +1,9 @@
-import React from "react";
-import { useNavigate } from "react-router";
-import "./Login.scss";
+import React from 'react';
+import { useNavigate } from 'react-router';
+import { PasswordInput } from '../../components/input/password/PasswordInput';
+import { TextInput } from '../../components/input/text/TextInput';
+import { validatePassword, validateUsername } from '../../validators/inputValidations';
+import './Login.scss';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -10,21 +13,16 @@ export const Login: React.FC = () => {
 
   const [signInDisabled, setSignInDisabled] = React.useState(true);
 
-  const handleUsernameChange = () => {
+  const handleUsernameChange = React.useCallback(() => {
     // console.log(usernameRef.current?.value);
     // Validate username, length greater than 4
     updateSignInDisabled();
-  };
+  }, []);
 
-  const handleUsernameUnfocus = () => {
-    console.log(usernameRef.current?.value);
-    // Validate username, length greater than 4
-  };
-
-  const handlePasswordChange = () => {
+  const handlePasswordChange = React.useCallback(() => {
     console.log(passwordRef.current?.value);
     updateSignInDisabled();
-  };
+  }, []);
 
   const updateSignInDisabled = React.useCallback(() => {
     // Check if username and password are valid
@@ -37,8 +35,11 @@ export const Login: React.FC = () => {
   const handleSignIn = () => {
     if (signInDisabled) return;
 
-    navigate("/");
+    navigate('/');
   };
+
+  const usernameValidation = React.useMemo(() => validateUsername(usernameRef), []);
+  const passwordValidation = React.useMemo(() => validatePassword(passwordRef), []);
 
   return (
     <div className="container">
@@ -48,29 +49,22 @@ export const Login: React.FC = () => {
         </div>
       </div>
       <div className="row">
-        <div className="input-field col s4 offset-s4">
-          <input
-            id="username"
-            type="text"
-            ref={usernameRef}
-            className="validate"
-            onChange={handleUsernameChange}
-            onBlur={handleUsernameUnfocus}
-          />
-          <label htmlFor="username">Username</label>
-        </div>
+        <TextInput
+          ref={usernameRef}
+          label="Username"
+          classNames="col s4 offset-s4"
+          validate={usernameValidation}
+          onChange={handleUsernameChange}
+        />
       </div>
       <div className="row">
-        <div className="input-field col s4 offset-s4">
-          <input
-            id="password"
-            type="password"
-            ref={passwordRef}
-            className="validate"
-            onChange={handlePasswordChange}
-          />
-          <label htmlFor="password">Password</label>
-        </div>
+        <PasswordInput
+          ref={passwordRef}
+          label="Password"
+          classNames="col s4 offset-s4"
+          validate={passwordValidation}
+          onChange={handlePasswordChange}
+        />
       </div>
       <div className="row">
         <div className="center-align col s4 offset-s4">
