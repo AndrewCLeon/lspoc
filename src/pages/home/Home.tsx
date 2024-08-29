@@ -1,6 +1,7 @@
-import React from "react";
-import { CampaignCard } from "../../components/campaign/card/CampaignCard";
-import { Navbar } from "../../components/navbar/Navbar";
+import React from 'react';
+import { CampaignCard } from '../../components/campaign/card/CampaignCard';
+import { Navbar } from '../../components/navbar/Navbar';
+import { ModalContainer } from '../../components/modal/ModalContainer';
 
 export const Home: React.FC = () => {
   return (
