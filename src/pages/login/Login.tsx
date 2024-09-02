@@ -56,8 +56,6 @@ export const Login: React.FC = () => {
         password: passwordRef.current?.value,
       });
 
-      console.log(isSignedIn);
-
       if (isSignedIn && nextStep.signInStep === 'DONE') {
         const user = await Auth.getCurrentUser();
         dispatch(authActions.setUserId(user.userId));
