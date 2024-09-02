@@ -22,14 +22,14 @@ export const Login: React.FC = () => {
 
   // TODO: Fix isolation and adhere to single responsibility principle
   React.useEffect(() => {
-    const f = async () => {
+    const checkIfUserIsAuthenticated = async () => {
       const user = await Auth.getCurrentUser();
       if (user) {
         dispatch(authActions.setUserId(user.userId));
         navigate(RoutePaths.Home);
       }
     };
-    f();
+    checkIfUserIsAuthenticated();
   }, []);
 
   const handleInputValidation = React.useCallback(
