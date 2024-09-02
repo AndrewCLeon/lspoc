@@ -11,32 +11,29 @@ export const Login: React.FC = () => {
   const usernameRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
 
-  const [signInDisabled, setSignInDisabled] = React.useState(true);
+  const [inputValidationStatus, setInputValidationStatus] = React.useState<Record<string, boolean>>(
+    {},
+  );
 
-  const handleUsernameChange = React.useCallback(() => {
-    // console.log(usernameRef.current?.value);
-    // Validate username, length greater than 4
-    updateSignInDisabled();
-  }, []);
+  const handleInputValidation = React.useCallback(
+    (inputLabel: string, isValid: boolean) => {
+      setInputValidationStatus({
+        ...inputValidationStatus,
+        [inputLabel]: isValid,
+      });
+    },
+    [inputValidationStatus, setInputValidationStatus],
+  );
 
-  const handlePasswordChange = React.useCallback(() => {
-    console.log(passwordRef.current?.value);
-    updateSignInDisabled();
-  }, []);
+  const signInDisabled = React.useMemo(() => {
+    return !inputValidationStatus['Username'] || !inputValidationStatus['Password'];
+  }, [inputValidationStatus]);
 
-  const updateSignInDisabled = React.useCallback(() => {
-    // Check if username and password are valid
-    const usernameLength = usernameRef.current?.value.length ?? 0;
-    const passwordLength = passwordRef.current?.value.length ?? 0;
-    const valid = usernameLength >= 4 && passwordLength >= 4;
-    setSignInDisabled(!valid);
-  }, [setSignInDisabled]);
-
-  const handleSignIn = () => {
+  const handleSignIn = React.useCallback(() => {
     if (signInDisabled) return;
 
     navigate('/');
-  };
+  }, [signInDisabled, navigate]);
 
   const usernameValidation = React.useMemo(() => validateUsername(usernameRef), []);
   const passwordValidation = React.useMemo(() => validatePassword(passwordRef), []);
@@ -54,7 +51,7 @@ export const Login: React.FC = () => {
           label="Username"
           classNames="col s4 offset-s4"
           validate={usernameValidation}
-          onChange={handleUsernameChange}
+          onValidation={handleInputValidation}
         />
       </div>
       <div className="row">
@@ -63,7 +60,7 @@ export const Login: React.FC = () => {
           label="Password"
           classNames="col s4 offset-s4"
           validate={passwordValidation}
-          onChange={handlePasswordChange}
+          onValidation={handleInputValidation}
         />
       </div>
       <div className="row">

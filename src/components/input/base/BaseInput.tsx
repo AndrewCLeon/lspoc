@@ -27,7 +27,8 @@ export const BaseInput: React.FC<BaseInputProps> = React.forwardRef((props, ref)
       const validationClass = valid ? 'valid' : 'invalid';
       setValidationStatus([validationClass, errorMessage, successMessage]);
     }
-  }, [props.validate]);
+    props.onValidation?.(props.label, valid ?? false, errorMessage ?? '');
+  }, [props.validate, props.onValidation]);
 
   const handleInputBlur = React.useCallback(() => {
     props.onChange?.();

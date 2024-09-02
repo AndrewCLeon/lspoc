@@ -7,4 +7,5 @@ type BaseInputProps = {
   defaultValue?: string;
   onChange?: () => void;
   validate?: () => [boolean?, string?, string?];
+  onValidation?: (inputName: string, isValid: boolean, validationMessage?: string) => void;
 };
