@@ -1,14 +1,14 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
-import { OpenAIAgent } from "./clients/OpenAI/OpenAI.ts";
-import { Provider } from "react-redux";
-import App from "./App.tsx";
-import store from "./store/store.ts";
-import "materialize-css/dist/css/materialize.min.css";
-import "materialize-css/dist/js/materialize.min.js";
-import "material-design-icons/iconfont/material-icons.css";
-import "./index.scss";
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import { OpenAIAgent } from './clients/OpenAI/OpenAI.ts';
+import { Provider } from 'react-redux';
+import App from './App.tsx';
+import store from './store/store.ts';
+import './amplify/configure-amplify.ts';
+import 'materialize-css/dist/css/materialize.min.css';
+import 'materialize-css/dist/js/materialize.min.js';
+import 'material-design-icons/iconfont/material-icons.css';
+import './index.scss';
 
 (window as any).OpenAI = OpenAIAgent;
 (window as any).store = store;
@@ -65,12 +65,10 @@ import "./index.scss";
 
 */
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <BrowserRouter basename="lspoc">
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </BrowserRouter>
-  </StrictMode>
+createRoot(document.getElementById('root')!).render(
+  <BrowserRouter basename="lspoc">
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </BrowserRouter>,
 );

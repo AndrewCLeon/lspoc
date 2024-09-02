@@ -1,7 +1,7 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import { resolve } from "path";
-import { copyFileSync, mkdirSync, readdirSync } from "fs";
+import react from '@vitejs/plugin-react-swc';
+import { resolve } from 'path';
+import { defineConfig, loadEnv } from 'vite';
+import { copyFileSync, mkdirSync, readdirSync } from 'fs';
 
 function copyAssets(srcDir: string, destDir: string) {
   mkdirSync(destDir, { recursive: true });
@@ -14,18 +14,26 @@ function copyAssets(srcDir: string, destDir: string) {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => {
   // Must match host path name / directory
-  base: "/lspoc/",
-  plugins: [
-    react(),
-    {
-      name: "copy-assets",
-      closeBundle() {
-        const srcDir = resolve(__dirname, "src/assets");
-        const destDir = resolve(__dirname, "dist/assets");
-        copyAssets(srcDir, destDir);
-      },
+
+  const env = loadEnv(mode, './env');
+
+  return {
+    base: '/lspoc/',
+    define: {
+      'process.env': env,
     },
-  ],
+    plugins: [
+      react(),
+      {
+        name: 'copy-assets',
+        closeBundle() {
+          const srcDir = resolve(__dirname, 'src/assets');
+          const destDir = resolve(__dirname, 'dist/assets');
+          copyAssets(srcDir, destDir);
+        },
+      },
+    ],
+  };
 });

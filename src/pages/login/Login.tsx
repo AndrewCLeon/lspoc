@@ -1,42 +1,91 @@
 import React from 'react';
+import * as Auth from 'aws-amplify/auth';
+import { useDispatch } from 'react-redux';
+import { authActions } from '../../store/slices/auth/auth';
 import { useNavigate } from 'react-router';
+import { RoutePaths } from '../../enums/RoutePaths';
 import { PasswordInput } from '../../components/input/password/PasswordInput';
 import { TextInput } from '../../components/input/text/TextInput';
 import { validatePassword, validateUsername } from '../../validators/inputValidations';
 import './Login.scss';
 
 export const Login: React.FC = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const usernameRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
 
-  const [signInDisabled, setSignInDisabled] = React.useState(true);
+  const [inputValidationStatus, setInputValidationStatus] = React.useState<Record<string, boolean>>(
+    {},
+  );
 
-  const handleUsernameChange = React.useCallback(() => {
-    // console.log(usernameRef.current?.value);
-    // Validate username, length greater than 4
-    updateSignInDisabled();
+  // TODO: Fix isolation and adhere to single responsibility principle
+  React.useEffect(() => {
+    const checkIfUserIsAuthenticated = async () => {
+      const user = await Auth.getCurrentUser();
+      if (user) {
+        dispatch(authActions.setUserId(user.userId));
+        navigate(RoutePaths.Home);
+      }
+    };
+    checkIfUserIsAuthenticated();
   }, []);
 
-  const handlePasswordChange = React.useCallback(() => {
-    console.log(passwordRef.current?.value);
-    updateSignInDisabled();
-  }, []);
+  const handleInputValidation = React.useCallback(
+    (inputLabel: string, isValid: boolean) => {
+      setInputValidationStatus({
+        ...inputValidationStatus,
+        [inputLabel]: isValid,
+      });
+    },
+    [inputValidationStatus, setInputValidationStatus],
+  );
 
-  const updateSignInDisabled = React.useCallback(() => {
-    // Check if username and password are valid
-    const usernameLength = usernameRef.current?.value.length ?? 0;
-    const passwordLength = passwordRef.current?.value.length ?? 0;
-    const valid = usernameLength >= 4 && passwordLength >= 4;
-    setSignInDisabled(!valid);
-  }, [setSignInDisabled]);
+  const signInDisabled = React.useMemo(() => {
+    return !inputValidationStatus['Username'] || !inputValidationStatus['Password'];
+  }, [inputValidationStatus]);
 
-  const handleSignIn = () => {
+  // TODO: Fix isolation and adhere to single responsibility principle
+  const handleSignIn = React.useCallback(async () => {
     if (signInDisabled) return;
 
-    navigate('/');
-  };
+    try {
+      const { nextStep, isSignedIn } = await Auth.signIn({
+        username: usernameRef.current?.value ?? '',
+        password: passwordRef.current?.value,
+      });
+
+      if (isSignedIn && nextStep.signInStep === 'DONE') {
+        const user = await Auth.getCurrentUser();
+        dispatch(authActions.setUserId(user.userId));
+        navigate(RoutePaths.Home);
+      } else if (nextStep.signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
+        dispatch(authActions.setUsername(usernameRef.current?.value ?? ''));
+        navigate(RoutePaths.PasswordReset);
+      } else if (nextStep.signInStep === 'RESET_PASSWORD') {
+        navigate(RoutePaths.PasswordReset);
+      } else {
+        navigate(RoutePaths.Home);
+      }
+    } catch (error) {
+      if (error instanceof Auth.AuthError) {
+        if (error.name === 'UserNotFoundException') {
+          setInputValidationStatus({
+            ...inputValidationStatus,
+            Username: false,
+          });
+        }
+
+        if (error.name === 'NotAuthorizedException') {
+          setInputValidationStatus({
+            ...inputValidationStatus,
+            Password: false,
+          });
+        }
+      }
+    }
+  }, [signInDisabled, navigate]);
 
   const usernameValidation = React.useMemo(() => validateUsername(usernameRef), []);
   const passwordValidation = React.useMemo(() => validatePassword(passwordRef), []);
@@ -54,7 +103,7 @@ export const Login: React.FC = () => {
           label="Username"
           classNames="col s4 offset-s4"
           validate={usernameValidation}
-          onChange={handleUsernameChange}
+          onValidation={handleInputValidation}
         />
       </div>
       <div className="row">
@@ -63,7 +112,7 @@ export const Login: React.FC = () => {
           label="Password"
           classNames="col s4 offset-s4"
           validate={passwordValidation}
-          onChange={handlePasswordChange}
+          onValidation={handleInputValidation}
         />
       </div>
       <div className="row">
