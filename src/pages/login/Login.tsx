@@ -1,11 +1,16 @@
 import React from 'react';
+import * as Auth from 'aws-amplify/auth';
+import { useDispatch } from 'react-redux';
+import { authActions } from '../../store/slices/auth/auth';
 import { useNavigate } from 'react-router';
+import { RoutePaths } from '../../enums/RoutePaths';
 import { PasswordInput } from '../../components/input/password/PasswordInput';
 import { TextInput } from '../../components/input/text/TextInput';
 import { validatePassword, validateUsername } from '../../validators/inputValidations';
 import './Login.scss';
 
 export const Login: React.FC = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const usernameRef = React.useRef<HTMLInputElement>(null);
@@ -14,6 +19,18 @@ export const Login: React.FC = () => {
   const [inputValidationStatus, setInputValidationStatus] = React.useState<Record<string, boolean>>(
     {},
   );
+
+  // TODO: Fix isolation and adhere to single responsibility principle
+  React.useEffect(() => {
+    const f = async () => {
+      const user = await Auth.getCurrentUser();
+      if (user) {
+        dispatch(authActions.setUserId(user.userId));
+        navigate(RoutePaths.Home);
+      }
+    };
+    f();
+  }, []);
 
   const handleInputValidation = React.useCallback(
     (inputLabel: string, isValid: boolean) => {
@@ -29,10 +46,47 @@ export const Login: React.FC = () => {
     return !inputValidationStatus['Username'] || !inputValidationStatus['Password'];
   }, [inputValidationStatus]);
 
-  const handleSignIn = React.useCallback(() => {
+  // TODO: Fix isolation and adhere to single responsibility principle
+  const handleSignIn = React.useCallback(async () => {
     if (signInDisabled) return;
 
-    navigate('/');
+    try {
+      const { nextStep, isSignedIn } = await Auth.signIn({
+        username: usernameRef.current?.value ?? '',
+        password: passwordRef.current?.value,
+      });
+
+      console.log(isSignedIn);
+
+      if (isSignedIn && nextStep.signInStep === 'DONE') {
+        const user = await Auth.getCurrentUser();
+        dispatch(authActions.setUserId(user.userId));
+        navigate(RoutePaths.Home);
+      } else if (nextStep.signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
+        dispatch(authActions.setUsername(usernameRef.current?.value ?? ''));
+        navigate(RoutePaths.PasswordReset);
+      } else if (nextStep.signInStep === 'RESET_PASSWORD') {
+        navigate(RoutePaths.PasswordReset);
+      } else {
+        navigate(RoutePaths.Home);
+      }
+    } catch (error) {
+      if (error instanceof Auth.AuthError) {
+        if (error.name === 'UserNotFoundException') {
+          setInputValidationStatus({
+            ...inputValidationStatus,
+            Username: false,
+          });
+        }
+
+        if (error.name === 'NotAuthorizedException') {
+          setInputValidationStatus({
+            ...inputValidationStatus,
+            Password: false,
+          });
+        }
+      }
+    }
   }, [signInDisabled, navigate]);
 
   const usernameValidation = React.useMemo(() => validateUsername(usernameRef), []);
